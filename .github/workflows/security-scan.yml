@@ -1,0 +1,52 @@
+name: DevSecOps Security Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+# ---------------- SNYK ----------------
+      - name: Install Snyk
+        run: npm install -g snyk
+
+      - name: Authenticate Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Snyk Scan
+        run: snyk test --json > reports/snyk-report.json
+
+      - name: Snyk Monitor
+        run: snyk monitor
+      - name: Create Reports Folder
+        run: mkdir -p reports
+
+# ---------------- SEMGREP ----------------
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      - name: Run Semgrep Scan
+        run: semgrep --config=auto --json > reports/semgrep-report.json
+
+# ---------------- SECRET SCAN ----------------
+      - name: Run Gitleaks (Secrets Detection)
+        uses: gitleaks/gitleaks-action@v2
+
+# ---------------- FAIL CONDITIONS ----------------
+      - name: Fail on High Vulnerabilities
+        run: snyk test --severity-threshold=high
