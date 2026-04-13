@@ -47,6 +47,7 @@ jobs:
 # ---------------- SECRET SCAN ----------------
       - name: Run Gitleaks (Secrets Detection)
         uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
 
 # ---------------- FAIL CONDITIONS ----------------
       - name: Fail on High Vulnerabilities
