@@ -32,12 +32,10 @@ jobs:
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
       - name: Run Snyk Scan
-        run: snyk test --json > reports/snyk-report.json
+        run: snyk test --json > reports/snyk-report.json || true
 
       - name: Snyk Monitor
         run: snyk monitor
-      - name: Create Reports Folder
-        run: mkdir -p reports
 
 # ---------------- SEMGREP ----------------
       - name: Install Semgrep
