@@ -20,6 +20,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+        
+      - name: Create Reports Folder   
+        run: mkdir -p reports
 
 # ---------------- SNYK ----------------
       - name: Install Snyk
