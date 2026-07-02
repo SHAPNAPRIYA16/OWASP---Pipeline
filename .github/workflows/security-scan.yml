@@ -51,4 +51,4 @@ jobs:
 
 # ---------------- FAIL CONDITIONS ----------------
       - name: Fail on High Vulnerabilities
-       run: snyk test --severity-threshold=high || true
+        run: snyk test --severity-threshold=high || true
